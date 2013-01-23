@@ -12,7 +12,10 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *adviceLabel;
 
+@property (strong, nonatomic) NSArray *adviceArray;
+
 - (IBAction)refreshAdvice:(id)sender;
 
+- (void) makePrediction;
 
 @end
