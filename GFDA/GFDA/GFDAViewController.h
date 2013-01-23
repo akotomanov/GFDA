@@ -10,4 +10,9 @@
 
 @interface GFDAViewController : UIViewController
 
+@property (strong, nonatomic) IBOutlet UILabel *adviceLabel;
+
+- (IBAction)refreshAdvice:(id)sender;
+
+
 @end
