@@ -16,6 +16,8 @@
 
 - (IBAction)refreshAdvice:(id)sender;
 
-- (void) makePrediction;
+- (void) makeAdvice;
+
+- (NSString *) stringByStrippingHTML;
 
 @end
