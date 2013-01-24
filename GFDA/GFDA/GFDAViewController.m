@@ -50,7 +50,6 @@
 }
 
 - (void) makeAdvice {
-    __weak typeof (self) bself = self;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
@@ -60,16 +59,22 @@
         NSError *error=nil;
         NSDictionary *response=[NSJSONSerialization JSONObjectWithData:data options:
                                        NSJSONReadingMutableContainers error:&error];
-        NSString* sth=[bself flattenHTML:[response objectForKey:@"new_advice"]];
+        NSString* sth=[self flattenHTML:[response objectForKey:@"new_advice"]];
         
-        
+        __weak typeof (self) bself = self;
         
         dispatch_sync(dispatch_get_main_queue(), ^{
             
-            [UIView animateWithDuration:1.0 animations:^{
-                bself.adviceLabel.text = sth;
-                bself.adviceLabel.alpha = 1.0;
-                }];
+            [UIView animateWithDuration:0.3f delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
+                bself.adviceLabel.alpha = 0.0;
+                
+                } completion:^(BOOL finished){
+                    [UIView animateWithDuration:0.5f delay:0.f options:UIViewAnimationOptionCurveEaseIn animations:^{
+                        bself.adviceLabel.text = sth;
+                        bself.adviceLabel.alpha = 1.0;
+                        
+                        } completion:nil];
+                    }];
             
             });
         
@@ -77,9 +82,6 @@
 }
 
 - (IBAction)refreshAdvice:(id)sender {
-    self.adviceLabel.text = nil;
-    self.adviceLabel.alpha = 0.0;
-    
     [self makeAdvice];
 }
 @end
