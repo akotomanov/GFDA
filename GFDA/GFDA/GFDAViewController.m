@@ -45,6 +45,26 @@
 //    return s;
 //}
 
+- (NSString *)flattenHTML:(NSString *)html {
+    
+    NSScanner *theScanner;
+    NSString *text = nil;
+    theScanner = [NSScanner scannerWithString:html];
+    
+    while ([theScanner isAtEnd] == NO) {
+        
+        [theScanner scanUpToString:@"<" intoString:NULL] ;
+        
+        [theScanner scanUpToString:@">" intoString:&text] ;
+        
+        html = [html stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%@>", text] withString:@""];
+        }
+    //
+    html = [html stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    return html;
+}
+
 - (void) makeAdvice {
 //    NSUInteger index = arc4random_uniform(self.adviceArray.count);
 //    
@@ -56,7 +76,7 @@
     NSError *error=nil;
     NSDictionary *response=[NSJSONSerialization JSONObjectWithData:data options:
                             NSJSONReadingMutableContainers error:&error];
-    NSString* sth=[response objectForKey:@"new_advice"];
+    NSString *sth=[self flattenHTML:[response objectForKey:@"new_advice"]];
     
     //NSLog(sth);
     
