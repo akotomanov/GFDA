@@ -20,15 +20,6 @@
 {
     [super viewDidLoad];
     
-//    self.adviceArray = [[NSArray alloc] initWithObjects:@"Do your fucking research.",
-//                            @"Black is not a fucking color.",
-//                            @"Be fucking authentic.",
-//                            @"Work with the fucking best.",
-//                            @"Don’t reinvent the fucking wheel.",
-//                            @"Less is fucking more.",
-//                            @"Design is fucking change.",
-//                            @"Seek fucking criticism.",
-//                            @"Fall in love with your fucking work.", nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -37,13 +28,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-//- (NSString *) stringByStrippingHTML {
-//    NSRange r;
-//    NSString *s = [[self copy] autorelease];
-//    while ((r = [s rangeOfString:@"<[^>]+>" options:NSRegularExpressionSearch]).location != NSNotFound)
-//        s = [s stringByReplacingCharactersInRange:r withString:@""];
-//    return s;
-//}
 
 - (NSString *)flattenHTML:(NSString *)html {
     
@@ -66,25 +50,30 @@
 }
 
 - (void) makeAdvice {
-//    NSUInteger index = arc4random_uniform(self.adviceArray.count);
-//    
-//    self.adviceLabel.text = [self.adviceArray objectAtIndex:index];
+    __weak typeof (self) bself = self;
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://goodfuckingdesignadvice.com/refresh-advice.php"]];
-    
-    NSData *data=[NSData dataWithContentsOfURL:url];
-    NSError *error=nil;
-    NSDictionary *response=[NSJSONSerialization JSONObjectWithData:data options:
-                            NSJSONReadingMutableContainers error:&error];
-    NSString *sth=[self flattenHTML:[response objectForKey:@"new_advice"]];
-    
-    //NSLog(sth);
-    
-    self.adviceLabel.text = sth;
-    
-    [UIView animateWithDuration:1.0 animations:^{
-        self.adviceLabel.alpha = 1.0;
-    }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://goodfuckingdesignadvice.com/refresh-advice.php"]];
+        
+        NSData *data=[NSData dataWithContentsOfURL:url];
+        NSError *error=nil;
+        NSDictionary *response=[NSJSONSerialization JSONObjectWithData:data options:
+                                       NSJSONReadingMutableContainers error:&error];
+        NSString* sth=[bself flattenHTML:[response objectForKey:@"new_advice"]];
+        
+        
+        
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            
+            [UIView animateWithDuration:1.0 animations:^{
+                bself.adviceLabel.text = sth;
+                bself.adviceLabel.alpha = 1.0;
+                }];
+            
+            });
+        
+        });
 }
 
 - (IBAction)refreshAdvice:(id)sender {

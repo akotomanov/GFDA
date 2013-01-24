@@ -18,6 +18,4 @@
 
 - (void) makeAdvice;
 
-- (NSString *) stringByStrippingHTML;
-
 @end
