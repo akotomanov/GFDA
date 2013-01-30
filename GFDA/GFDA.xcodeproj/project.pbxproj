@@ -293,6 +293,7 @@
 				CC216C0F16B0A1B400299521 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
